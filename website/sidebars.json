@@ -1,8 +1,35 @@
 {
   "docs": {
-    "Docusaurus": ["doc1"],
-    "First Category": ["doc2"],
-    "Second Category": ["doc3"]
+    "Overview": ["index"],
+    "FIO Protocol": [
+      "knowledgebase/fio-protocol/code",
+      "knowledgebase/fio-protocol/eosio",
+      "knowledgebase/fio-protocol/multisig",
+      "knowledgebase/fio-protocol/resources",
+      "knowledgebase/fio-protocol/tpid"
+    ],
+    "Tools": ["knowledgebase/tools/clio"],
+    "Wallet Integration Guide": [
+      "knowledgebase/wallet-guide/integration",
+      "knowledgebase/wallet-guide/sample",
+      "knowledgebase/wallet-guide/demo",
+      "knowledgebase/wallet-guide/mapping",
+      "knowledgebase/wallet-guide/encryption",
+      "knowledgebase/wallet-guide/reg-site"
+    ],
+    "Exchange Integration Guide": [
+      "knowledgebase/exchange-guide/listing-integration",
+      "knowledgebase/exchange-guide/fio-integration"
+    ],
+    "FIO Chain": [
+      "knowledgebase/fio-chain/node-build",
+      "knowledgebase/fio-chain/node-history",
+      "knowledgebase/fio-chain/testnet",
+      "knowledgebase/fio-chain/mainnet",
+      "knowledgebase/fio-chain/voting",
+      "knowledgebase/fio-chain/bp",
+      "knowledgebase/fio-chain/disclosure"
+    ]
   },
   "docs-other": {
     "First Category": ["doc4", "doc5"]

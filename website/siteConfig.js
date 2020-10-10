@@ -21,7 +21,7 @@ const users = [
 ];
 
 const siteConfig = {
-  title: 'Test Site', // Title for your website.
+  title: 'Developer Hub', // Title for your website.
   tagline: 'A website for testing',
   url: 'https://ericbutz.github.io', // Your website URL
   baseUrl: '/fio-developer-hub/', // Base URL for your project */
@@ -38,24 +38,24 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    {doc: 'doc1', label: 'Docs'},
-    {doc: 'doc4', label: 'API'},
+    {doc: 'index', label: 'Docs'},
+    {href: 'https://ericbutz.github.io/fio-api/', label: 'API Reference'},
     {page: 'help', label: 'Help'},
-    {blog: true, label: 'Blog'},
+    {search: true},
   ],
 
   // If you have users set above, you add it here:
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/favicon.ico',
+  headerIcon: 'img/fio-logo.svg',
   footerIcon: 'img/favicon.ico',
   favicon: 'img/favicon.ico',
 
   /* Colors for website */
   colors: {
-    primaryColor: '#a8a084',
-    secondaryColor: '#75705c',
+    primaryColor: '#ff1864',
+    secondaryColor: '#222222',
   },
 
   /* Custom fonts for website */
@@ -94,7 +94,7 @@ const siteConfig = {
 
   // For sites with a sizable amount of content, set collapsible to true.
   // Expand/collapse the links and subcategories under categories.
-  // docsSideNavCollapsible: true,
+  docsSideNavCollapsible: true,
 
   // Show documentation's last contributor's name.
   // enableUpdateBy: true,
