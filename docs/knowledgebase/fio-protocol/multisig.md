@@ -4,26 +4,181 @@ title: Multisig
 sidebar_label: Multisig
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+Multisig
 
-## Lorem
+Overview
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
+The following is a step-by-step guide for how to convert a regular FIO account into a “2 out of 3” multisig (any 2 signatures of the 3 provided accounts are required to execute a transaction) on the FIO Chain. All transactions in the steps below are submitted using /push_transaction API method.
 
-## Mauris In Code
+Step 1: Change owner permissions of account
 
-```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
-```
+This call with replace owner permission with 3 different accounts. Please note that those accounts had to been previously created on the FIO Chain by sending funds to them or registering a FIO Address.
+{
+  "action": "updateauth",
+  "json": {
+    "account": "aewgyixsunjo",
+    "permission": "owner",
+    "parent": "",
+    "auth": {
+      "threshold": 2,
+      "keys": [],
+      "waits": [],
+      "accounts": [
+        {
+          "permission": {
+            "actor": "ianyjw312vbg",
+            "permission": "active"
+          },
+          "weight": 1
+        },
+        {
+          "permission": {
+            "actor": "rcwh3tqbqcpu",
+            "permission": "active"
+          },
+          "weight": 1
+        },
+        {
+          "permission": {
+            "actor": "w5bhllejse2f",
+            "permission": "active"
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "max_fee": 10000000
+  }
+}
+Step 2: Change active permissions of account
 
-## Nulla
+This call with replace active permission with 3 different accounts. Please note that those accounts had to been previously created on the FIO Chain by sending funds to them or registering a FIO Address.
+{
+  "action": "updateauth",
+  "json": {
+    "account": "aewgyixsunjo",
+    "permission": "active",
+    "parent": "owner",
+    "auth": {
+      "threshold": 2,
+      "keys": [],
+      "waits": [],
+      "accounts": [
+        {
+          "permission": {
+            "actor": "ianyjw312vbg",
+            "permission": "active"
+          },
+          "weight": 1
+        },
+        {
+          "permission": {
+            "actor": "rcwh3tqbqcpu",
+            "permission": "active"
+          },
+          "weight": 1
+        },
+        {
+          "permission": {
+            "actor": "w5bhllejse2f",
+            "permission": "active"
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "max_fee": 10000000
+  }
+}
+Step 3: Propose a multisig transaction
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+This call proposes a transaction of spending funds.
+{
+  "code": "eosio.msig",
+  "action": "propose",
+  "args": {
+    "proposer": "ianyjw312vbg",
+    "proposal_name": "propcwh3",
+    "requested": [
+      {
+        "actor": "w5bhllejse2f",
+        "permission": "active"
+      },
+      {
+        "actor": "rcwh3tqbqcpu",
+        "permission": "active"
+      }
+    ],
+    "trx": {
+      "chain_id": "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
+      "expiration": "2019-12-15T21:48:47",
+      "ref_block_num": 266016,
+      "ref_block_prefix": 102118591,
+      "max_net_usage_words": 0,
+      "max_cpu_usage_ms": 0,
+      "delay_sec": 0,
+      "context_free_actions": [],
+      "actions": [
+        {
+          "account": "fio.token",
+          "name": "trnsfiopubky",
+          "authorization": [
+            {
+              "actor": "aewgyixsunjo",
+              "permission": "active"
+            }
+          ],
+          "data": "3546494f385052653457525a4a6a356d6b656d367156474b79764e466750734e6e6a4e4e366b50686836456143707a4356696e354a6a40420f000000000080b2e60e0000000040dfd4b83bcfb83200"
+        }
+      ],
+      "transaction_extensions": []
+    },
+    "max_fee": 10000000
+  }
+}
+Step 4: Account 1 approves transaction
 
-## Orci
+This call approves the transaction of spending funds.
+{
+  "code": "eosio.msig",
+  "action": "approve",
+  "args": {
+    "proposer": "ianyjw312vbg",
+    "proposal_name": "propcwh3",
+    "level": {
+      "actor": "w5bhllejse2f",
+      "permission": "active"
+    },
+    "max_fee": 10000000
+  }
+}
+Step 5: Account 2 approves transaction
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
+This call approves the transaction of spending funds.
+{
+  "code": "eosio.msig",
+  "action": "approve",
+  "args": {
+    "proposer": "ianyjw312vbg",
+    "proposal_name": "propcwh3",
+    "level": {
+      "actor": "rcwh3tqbqcpu",
+      "permission": "active"
+    },
+    "max_fee": 10000000
+  }
+}
+Step 6: Transaction is executed
 
-## Phasellus
+This call executes the transaction of spending funds.
+{
+  "code": "eosio.msig",
+  "action": "exec",
+  "args": {
+    "proposer": "ianyjw312vbg",
+    "proposal_name": "propcwh3",
+    "executer": "ianyjw312vbg",
+    "max_fee": 10000000
+  }
+}
 
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.

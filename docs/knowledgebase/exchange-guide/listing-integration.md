@@ -4,26 +4,119 @@ title: Listing integration
 sidebar_label: Listing integration
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+Exchange listing integration
 
-## Lorem
+Table of contents
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
+Running nodes
+FIO token transfer transactions
+Handling FIO token deposits
+Handling FIO token withdrawals
+Recognizing deposits when using unique FIO Public Key
+Obtaining token supply in real-time
+Running nodes
 
-## Mauris In Code
+See Building a node and History node.
+FIO token transfer transactions
 
-```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
-```
+FIO token
 
-## Nulla
+FIO Chain’s native token is FIO. FIO is the only token present on the FIO Chain.
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+There are 1,000,000,000 Smallest Units of FIO (SUFs) inside 1 FIO. All transactions in FIO Protocol are expressed in SUFs.
 
-## Orci
+Ticker: FIO
+Symbol: ᵮ
+Brand Assets
+Transferring FIO token
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
+Tokens on the FIO Chain are transferred using /transfer_tokens_pub_key method.
 
-## Phasellus
+The method requires payee FIO Public Key. The key is hashed down to an account name and funds are transferred to that account. If that account does not exist, it gets created automatically.
 
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.
+The native EOSIO transfer action is not supported.
+
+Checking token balance
+
+Token balance can be obtained by passing FIO Public Key to /get_fio_balance API method.
+
+Transaction history
+
+See History node
+
+Transaction memo
+
+/transfer_tokens_pub_key does not accept a memo field. To attach a memo to a FIO token transfer, both payer and payee must have a FIO Address. See FIO integration.
+
+TPID
+
+Do not forget to include your TPID in the request to earn portion of fees paid.
+Handling FIO token deposits
+
+Using unique FIO Public Key
+
+Similar to UTXO-based chains, to accept FIO token deposit, an exchange may generate a unique FIO Public Key for every user or deposit. Unlike EOSIO, FIO Chain does not require that key to be assigned to an existing account before funds are sent to it. Once a token transfer is initiated to that Public Key, the account will be created automatically.
+
+FIO Chain’s is registered at index 235/0x800000eb on the SLIP-44.
+
+FIO Private Keys follow standard Wallet Import Format (WIF) standard and public keys follow well-known base58 encoding with FIO prefix, e.g.
+
+FIO7tkpmicyK2YWShSKef6B9XXqBN6LpDJo69oRDfhn67CEnj3L2G
+
+For those who have integrated EOSIO, FIO public keys follows the same format, except the prefix is FIO instead of EOS.
+
+FIO Key Derivation Path:
+
+"44'/235'/0'/0/0"
+
+See Private/Public Keys for more information including testing examples.
+
+Using FIO Address or FIO Request
+
+See FIO integration.
+
+Additional Resources
+
+Account balances and history
+Recognizing deposits when using unique FIO Public Key
+
+When using unique FIO Public Key for deposits, you can look for trnsfiopubky transaction with target payee_public_key in every block. You can get transactions in every block by running /get_block at every block height.
+
+trnsfiopubky via Multisig
+
+It is important to note that /get_block will not return trnsfiopubky transaction if it was executed as part of Multisig as that transaction is executed via inline contract actions and only shows up as inline trace, which are not returned by /get_block.
+
+In order to properly recognize transfers made using Multisig you should monitor /get_block for executed transaction status:
+
+"transactions": [   {
+      "status": "executed",
+      "cpu_usage_us": 7929,
+      "net_usage_words": 0,
+      "trx": "fa206c2e47af50873dfe08a03802918113c1832e3f42b26e1b20ad77b66ccf20"
+   }]
+and then fetch inline traces using /v1/history/get_transaction and returned trx. This requires History node.
+
+See more details on Community Discussion Page.
+Handling FIO token withdrawals
+
+Using FIO Public Key
+
+With this option, the user’s withdrawal area on the exchange would ask for a FIO Public Key and the amount of withdrawals. The transfer would be executed using /transfer_tokens_pub_key and metadata recorded using /record_obt_data.
+
+Using FIO Address or FIO Request
+
+See FIO integration.
+Obtaining token supply in real-time
+
+The Foundation operates API end-point which returns token supply statistics, specifically:
+
+Statistic	Description	End-point
+Total supply	All tokens that were ever minted. Maximum token supply is capped at 1,000,000,000 FIO.	https://fioprotocol.io/supply
+Circulating supply	Total supply less locked tokens.	https://fioprotocol.io/circulating
+Locked tokens	Tokens which are locked and cannot be transferred.	https://fioprotocol.io/locked
+Data returned includes 9 decimal points, e.g. 705906876.848960519
+
+To return data in Smallest Units of FIO (SUFs), add /suf to end point, e.g. https://fioprotocol.io/supply/suf
+
+To return the data as json, add ?json=true top end point, e.g. https://fioprotocol.io/supply?json=true
+

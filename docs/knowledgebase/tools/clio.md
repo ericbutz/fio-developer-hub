@@ -4,26 +4,88 @@ title: clio
 sidebar_label: clio
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+clio
 
-## Lorem
+Table of contents
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
+Overview
+Download clio
+Manage wallet
+Msig
+Vote using clio
+Push action
+Overview
 
-## Mauris In Code
+command line interface for Fio (clio) is a tool which allows for some commands to be ran from command line.
 
-```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
-```
+Download clio
 
-## Nulla
+You can download it in a standalone FIO Ready package on Github
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+Manage wallet
 
-## Orci
+Create a wallet
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
+clio wallet create -n PICK_WALLET_NAME --to-console
+Generate private/public keys
 
-## Phasellus
+clio create key --to-console
+Import private key into wallet
 
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.
+clio wallet import --private-key YOUR_PRIVATE_KEY -n PICK_WALLET_NAME
+Remove key from wallet
+
+clio wallet remove_key YOUR_PUBLIC_KEY -n PICK_WALLET_NAME --password YOUR_WALLET_PASSWORD
+Unlock wallet
+
+clio wallet unlock -n PICK_WALLET_NAME --password YOUR_WALLET_PASSWORD
+Msig
+
+Propose 1 FIO transfer msig
+
+clio -u https://API_NODE_URL multisig propose NAME_YOUR_MSIG '[{"actor": "ACCOUNT_OF_FIRST_SIGNER", "permission": "active"},{"actor": "ACCOUNT_OF_SECOND_SIGNER", "permission": "active"}]' '[{"actor": "ACCOUNT_OF_MSIG", "permission": "active"}]' fio.token trnsfiopubky '{"payee_public_key":"PUBLIC_KEY_WHERE_FUNDS_ARE_SENT", "amount":1000000000, "max_fee":2000000000, "actor":"ACCOUNT_OF_MSIG", "tpid":""}' 1000000000 -p ACCOUNT_OF_MSIG@active
+Approve msig
+
+clio -u https://API_NODE_URL multisig approve ACCOUNT_OF_MSIG_PROPOSER NAME_YOUR_MSIG '{"actor": "ACCOUNT_OF_SIGNER", "permission": "active"}' 400000000 -p ACCOUNT_OF_SIGNER@active
+Execute msig
+
+clio -u https://API_NODE_URL multisig exec ACCOUNT_OF_MSIG_PROPOSER NAME_YOUR_MSIG 400000000 -p ACCOUNT_OF_SIGNER@active
+Vote using clio
+
+See Voting for block producers using clio
+
+Push action
+
+Using clio you can push any action to the blockchain as follows
+
+clio -u https://API_NODE_URL push action CONTRACT ACTION DATA -p ACCOUNT_OF_SIGNER@active
+Where:
+
+CONTRACT and ACTION are specified for every API call in FIO Protocol API Spec. For example CONTRACT and ACTION for /register_fio_domain is fio.address and regdomain respectively.
+DATA is specified for every API call in FIO Protocol API Spec. For example DATA for /register_fio_domain is:
+{
+  "fio_domain": "alice",
+  "owner_fio_public_key": "FIO8PRe4WRZJj5mkem6qVGKyvNFgPsNnjNN6kPhh6EaCpzCVin5Jj",
+  "max_fee": 2000000000,
+  "tpid": "rewards@wallet",
+  "actor": "aftyershcu22"
+}
+Registering FIO Address
+
+For full description of fields see /register_fio_address
+
+clio -u https://API_NODE_URL push action fio.address regaddress '{"fio_address": "YOUR_ADDRESS", "owner_fio_public_key": "", "max_fee": 40000000000, "tpid": "", "actor": "ACCOUNT_OF_SIGNER"
+}' -p ACCOUNT_OF_SIGNER@active
+Setting domain public
+
+For full description of fields see /set_fio_domain_public
+
+clio -u https://API_NODE_URL push action fio.address setdomainpub '{"fio_domain": "YOUR_DOMAIN", "is_public": 1, "max_fee": 2000000000, "tpid": "", "actor": "ACCOUNT_OF_DOMAIN_OWNER"
+}' -p ACCOUNT_OF_DOMAIN_OWNER@active
+Transferring tokens
+
+For full description of fields see /transfer_tokens_pub_key
+
+clio -u https://API_NODE_URL push action fio.token trnsfiopubky '{"payee_public_key": "RECIPIENT_FIO_PUBLIC_KEY", "amount": 1000000000, "max_fee": 2000000000, "tpid": "", "actor": "ACCOUNT_OF_PAYER"
+}' -p ACCOUNT_OF_PAYER@active
+

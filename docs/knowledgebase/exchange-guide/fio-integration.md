@@ -4,26 +4,47 @@ title: FIO integration
 sidebar_label: FIO integration
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+Exchange FIO integration
 
-## Lorem
+Table of contents
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
+Overview
+Handling FIO token deposits
+Handling FIO token withdrawals
+Overview
 
-## Mauris In Code
+Using FIO Address, FIO Request and FIO Data can significantly improve the user experience of depositing and withdrawing of any token to or from the exchange.
+Handling FIO token deposits
 
-```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
-```
+Using unique FIO Address for each user
 
-## Nulla
+An exchange may set-up a unique FIO Address for each user of the exchange, and display it in their deposit area, e.g. alice@myexchange.
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+To deposit tokens of any supported cryptocurrency to their account the user would simply send tokens from FIO-enabled wallet to their FIO Address, e.g. alice@myexchange, and would not have to deal with Public Keys, memo fields or even having to log into the exchange.
 
-## Orci
+Each FIO Address may be mapped using /add_pub_address to either the same Public Address for all users or unique one for each user.
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
+Using same FIO Address for all users
 
-## Phasellus
+An exchange may set-up a single Deposit FIO Address for all users of the exchange, and display it their deposit area, e.g. deposits@myexchange.
 
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.
+To deposit any supported token to their account the user would simply send tokens from FIO-enabled wallet to the Deposit FIO Address, e.g. deposits@myexchange. To properly identify the inbound transaction, the user would have to either include a memo which includes their exchange account, or provide the exchange, ahead of time, with a list of FIO Addresses which the user owns.
+
+The Deposit FIO Address would be mapped using /add_pub_address to a single FIO Public Key.
+
+The inbound transaction can be identified by reading the OBT Data using /get_obt_data. The data is encrypted. Once decrypted, memo or FIO Address of Payee will uniquely identify the user and obt_id will contain native chain transaction ID of the corresponding deposit.
+
+Transaction memo for FIO token transfer
+
+/transfer_tokens_pub_key does not accept a memo field. To attach a memo to a FIO token transfer, a /record_obt_data transaction should be sent after the tokens are transferred and include the token transfer transaction id. /record_obt_data requires that both payer and payee have a FIO Address. If either party does not have a FIO Address transfer of memo is not supported.
+Handling FIO token withdrawals
+
+Using FIO Address
+
+With this option, the user’s withdrawal area on the exchange would ask for a FIO Address and the amount of withdrawals of any token. Once FIO Address is entered, the corresponding public address for that chain is looked-up using /get_pub_address and the transfer is executed on the native chain.
+
+Using FIO Request
+
+If users of exchange were assigned unique FIO Addresses or if users provided the exchange, ahead of time, with a list of FIO Addresses which the user owns, they could send a FIO Request from their wallet to the exchange’s FIO Address (either generic, e.g. withdrawals@myexchange, or unique, e.g. alice@myexchange).
+
+The user would then login to the exchange and approve the FIO Request. Once approved, the exchange would execute the transfer on the native chain.

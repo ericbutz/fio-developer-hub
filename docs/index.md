@@ -3,7 +3,11 @@ id: index
 title: Overview
 sidebar_label: Overview
 ---
-## What is FIO Protocol?
+## Getting Started
+
+[![Getting Started with the FIO Dev Hub](http://img.youtube.com/vi/nYp5QLEjDeY/0.jpg)](https://www.youtube.com/watch?v=nYp5QLEjDeY&feature=emb_logo "Getting Started with the FIO Protocol Website and Integration Documentation")
+
+## What is FIO Protocol? 
 
 The FIO Protocol is bridging the gap between wallets (both exchange-based and self-sovereign) as well as crypto payment processing platforms providing an industry standard decentralized service layer of data, requests and confirmations that abstract away the complexities of the underlying blockchains. The FIO Protocol is not a wallet, not an exchange and not a crypto payment processor, rather, it enables them all to deliver a dramatically improved user experience. The FIO Protocol does not compete with other blockchains nor does it send value on or integrate with other blockchains but, rather, it enables them all to be more successful. Technically speaking, all other blockchains do not even know that the FIO Protocol exists.
 
@@ -44,32 +48,32 @@ We have a Testnet up and running, check it out here.
 ### API endpoints
 
 #### Testnet Chain API
-
+```
 http://testnet.fioprotocol.io/v1/chain/
-
+```
 #### Mainnet Chain API
 
-See Github
+[See Github](https://github.com/fioprotocol/fio.mainnet)
 
 #### Testnet Registration Site API
-
+```
 https://reg.az.fio.dev/public-api/
-
+```
 ### Mainnet Registration Site API
-
+```
 https://reg.fioprotocol.io/public-api/
-
+```
 ### Testnet History API
-
+```
 http://testnet.fioprotocol.io/v1/history/
-
+```
 ### Mainnet History API
 
 See Github
 
 ### Help
 
-Need help? Just ask.
+Need help? [Just ask](https://developers.fioprotocol.io/help/contact-us).
 
 ## Complete List of Developer Hub Resources
 

@@ -4,26 +4,61 @@ title: Resource Management
 sidebar_label: Resource Management
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+Resource management
 
-## Lorem
+Overview
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
+The FIO Chain inherits EOSIO resource management, but makes a number of modifications to it to remove the user complexity, while supporting its fee model.
 
-## Mauris In Code
+Staking
 
-```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
-```
+FIO Chain does not support staking.
 
-## Nulla
+RAM limits
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+Every new account will have initial RAM allocated to 25600 bytes (25K). Every time an account pays a fee or covers a transaction from a bundle, that account’s RAM will be permanently increased by the number associated with the executed action. In case of multi-action transactions, each action will increment the RAM independently.
 
-## Orci
+Action	Increase amount in bytes
+REGDOMAIN	2,560
+REGADDRESS	2,560
+ADDADDRESS	512
+SETDOMPUB	256
+NEWFUNDSREQUEST	2,048
+RECORDOBT	2,048
+RENEWADDRESS	1,024
+RENEWDOMAIN	1,024
+TRNSPBKY	1,024
+REJECTFUNDS	512
+LINKAUTH	1,024
+REGPRODUCER	1,024
+REGPROXY	1,024
+VOTEPROXY	512
+VOTEPRODUCER	1,024
+UPDATEAUTH	1,024 per 1,000 bytes of trx size
+PROPOSE	1,024 per 1,000 bytes of trx size
+APPROVE	1,024
+XFERDOMAIN	512
+XFERADDRESS	512
+Example
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
+Account A registers a FIO Address for themselves and pays a 40 FIO fee
+Account A RAM is increased by 2,560 bytes
+Account A transfers funds to a key not associated with an account
+Account A RAM is increased by 2,560 bytes
+Account B is created with initial limit of 25KB of RAM
+Scheduled BP RAM override
 
-## Phasellus
+When a BP is added to the BP schedule to produce blocks, their RAM limit will be changed to unlimited
+When a BP is removed from BP schedule, their RAM will be changed to existing RAM usage of their account + 25K
+Transaction size limit
 
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.
+Every transaction is limited to max size of 8098 bytes. BPs in schedule as exempt from the transaction limit for propose action.
+
+CPU limit
+
+All accounts are created with unlimited CPU, as only authorized contracts with pre-approved CPU usage can run on the FIO Chain.
+
+NET limit
+
+All accounts are created with unlimited NET, as there is a transaction size limit.
+

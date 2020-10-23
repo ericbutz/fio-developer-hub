@@ -4,6 +4,8 @@
     "FIO Protocol": [
       "knowledgebase/fio-protocol/code",
       "knowledgebase/fio-protocol/eosio",
+      "knowledgebase/fio-protocol/keys-accounts",
+      "knowledgebase/fio-protocol/linkauth",
       "knowledgebase/fio-protocol/multisig",
       "knowledgebase/fio-protocol/resources",
       "knowledgebase/fio-protocol/tpid"
@@ -29,6 +31,9 @@
       "knowledgebase/fio-chain/voting",
       "knowledgebase/fio-chain/bp",
       "knowledgebase/fio-chain/disclosure"
+    ],
+    "Exchange Integration Guide": [
+      "knowledgebase/help/contact"
     ]
   },
   "docs-other": {

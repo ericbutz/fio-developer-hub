@@ -4,26 +4,101 @@ title: Mapping Public Addresses
 sidebar_label: Mapping Public Addresses
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+Mapping Public Addresses
 
-## Lorem
+Overview
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
+One of the key utilities of the FIO Protocol is the ability to send crypto using a FIO Address, instead of complicated Native Blockchain Public Address (NBPA) such as 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B on Ethereum.
 
-## Mauris In Code
+A wallet can very easily look-up the NBPA using the /get_pub_address method.
 
-```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
-```
+However, before this can happen the wallet hosting the FIO Address must first map the NBPA to the FIO Address.
 
-## Nulla
+Mapping NBPAs to FIO Address
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+To map NBPA to a FIO Address use the /add_pub_address method.
 
-## Orci
+You may pass up to 5 public addresses in a single call. The call is eligible for bundled transactions, so in most cases there will not be a fee to the user.
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
+Each NBPA is identified with:
 
-## Phasellus
+chain_code identifies the blockchain, such as Bitcoin (BTC), or Ethereum (ETH).
+token_code identifies the token on that blockchain, for example USDC represents ERC20 token on Ethereum.
+For blockchains that only have one token use the same value for blockchain and token, e.g. for Bitcoin use chaincode: BTC, tokencode: BTC.
 
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.
+FIO maintains a list of chain and token codes that are being used by other FIO Protocol integrators. It is recommended that you follow this standard any time you submit a transaction on the FIO Protocol. If you are using different codes please map them to those published.
+
+If you are using codes which are not yet part of the standard, please submit a pull request to the list to ensure other FIO Protocol integrators are using the same codes.
+
+Multi-level Addressing
+
+Certain blockchains, or accounts on those blockchains, require the use of Multi-level Addressing, when, in addition to public address, additional piece of information is required to properly route a transaction.
+
+The following are examples:
+
+Destination Tags on Ripple
+Memos on Stellar
+Payment ID on Monero
+There is not a clear standard on how to properly communicate these additional properties. The FIO Protocol will support both integrated addresses as well as URI Scheme as follows:
+
+Integrated Address - an integrated address may be passed in just like standard public address. The FIO protocol does not perform validation on the passed string.
+URI Scheme - the FIO Protocol will support the formatting of public addresses using URI Schemes, where certain attributes are appended to the public address following a ‘?’ and delimited with ‘&’.
+URI Parameters
+
+FIO maintains a list of uri parameters that are being used by other FIO Protocol integrators. It is recommended that you follow this standard any time you submit a transaction on the FIO Protocol.
+
+If you are using parameters which are not yet part of the standard, please submit a pull request to the list to ensure other FIO Protocol integrators are using the same parameters.
+
+See example of a FIO Address which has public addresses with parameters.
+
+What should a wallet do?
+
+When resolving a FIO Address, expect that the returned public address will contain URI parameters.
+Most common is memo. If you receive a memo, insert it into the memo (or equivalent) parameter for the native transaction on that blockchain.
+If you receive any of the other parameters above, insert it into corresponding parameter for the native transaction on that blockchain.
+If you do not support ability to accept returned parameters, consider warning the user that the FIO Address they used contains information which will not be used.
+Privacy
+
+Currently NBPA mappings are stored on the FIO Chain unencrypted. It is therefore possible for an observer to connect multiple NBPAs via their parent FIO Address.
+
+It is therefore important that integrating wallets clearly communicate this to their users, so that they can make an educated decision on which NBPAs to map. In addition users should understand that due to the nature of blockchain once NBPA has been published on the blockchain it will be accessible indefinitely, even if it is later “removed” from current mappings.
+
+For inspiration, please review sample Wallet UX screens for Connecting NBPAs.
+
+Changing or removing NBPAs
+
+NBPA mappings can be changed using the same /add_pub_address method.
+
+Specific NBPA mappings can be removed using /remove_pub_address method.
+
+All NBPA mappings can be removed using /remove_all_pub_address method. FIO token mapping will not be removed.
+
+FIO Public Key mapping
+
+The FIO Public key which was used to register FIO Address is automatically added to that address’ mapping for chaincode: FIO, tokencode: FIO.
+
+This mapping serves two distinct purposes:
+
+When another user wants to send FIO tokens to that FIO Address, the mapped public key will be returned in /get_pub_address to enable that transfer.
+When another user is sending new_funds_request or record_obt_data to that FIO Address, the mapped public key will be used to encrypt the data. It is therefore critical that:
+The associate private key is accessible and available in the wallet to decrypt that data. Wallets should not allow users to map a random FIO Public Key.
+If a user tries to remove FIO Public key mapping, they should be advised that they will not be able to receive a FIO Request or Record OBT Data in the future until a valid FIO Public key is added back.
+Mapping FIO Address to bank accounts
+
+FIO Address can also be mapped to bank account information required to route fiat transactions. For this purpose chain_code: FIAT should be used and token_code should correspond to the banking standard used.
+
+For example to map FIO Address to a ACH bank account:
+
+{
+	"chain_code": "FIAT",
+	"token_code": "ACH",
+	"public_address": "{'aba':'102000076','acc':'1234567890'}"
+}
+To map FIO Address to an IBAN bank account:
+
+{
+	"chain_code": "FIAT",
+	"token_code": "IBAN",
+	"public_address": "{'iban':'DE89370400440532013000'}"
+}
+
